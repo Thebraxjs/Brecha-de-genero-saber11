@@ -1,0 +1,54 @@
+Registros leídos: 576,213
+Con sexo válido (F/M): 576,209
+
+=== 1. DESCRIPTIVO Y PRUEBA DE WELCH ===
+[Toda la base] n=576,209 (F=305,803, M=270,406) | media F=50.43, M=53.87 | DE F=13.01, M=13.47 | brecha=3.43 IC95%=(3.36, 3.50) | d de Cohen=0.259 | Welch t=98.0, p=0 | Levene p=2.4e-62 | Mann-Whitney p=0
+[Solo grado 11] n=489,883 (F=261,292, M=228,591) | media F=51.61, M=55.19 | DE F=12.68, M=13.18 | brecha=3.58 IC95%=(3.51, 3.65) | d de Cohen=0.277 | Welch t=96.6, p=0 | Levene p=1.9e-48 | Mann-Whitney p=0
+[Solo grado 26 (validantes)] n=58,297 (F=29,636, M=28,661) | media F=40.08, M=44.38 | DE F=9.91, M=11.25 | brecha=4.30 IC95%=(4.13, 4.47) | d de Cohen=0.406 | Welch t=48.9, p=0 | Levene p=1.5e-136 | Mann-Whitney p=0
+Sesgo (skewness) por sexo: {0: 0.199, 1: -0.008}
+  % con puntaje >= 60: hombres 35.2%, mujeres 24.6%
+  % con puntaje >= 70: hombres 12.1%, mujeres 7.5%
+  % con puntaje >= 80: hombres 2.2%, mujeres 1.3%
+
+=== 2. PERFILES A/B/C (estratificación) ===
+[Perfil A] n=25,925 (F=14,822, M=11,103) | media F=46.67, M=49.49 | DE F=11.40, M=12.40 | brecha=2.83 IC95%=(2.53, 3.12) | d de Cohen=0.239 | Welch t=18.8, p=3e-78 | Levene p=8.8e-23 | Mann-Whitney p=3e-81
+[Perfil B] n=34,780 (F=17,556, M=17,224) | media F=51.70, M=54.91 | DE F=11.71, M=11.99 | brecha=3.20 IC95%=(2.95, 3.45) | d de Cohen=0.270 | Welch t=25.2, p=1e-138 | Levene p=0.00092 | Mann-Whitney p=6.2e-142
+[Perfil C] n=13,194 (F=6,483, M=6,711) | media F=62.53, M=63.70 | DE F=13.21, M=13.98 | brecha=1.17 IC95%=(0.70, 1.63) | d de Cohen=0.086 | Welch t=4.9, p=8.1e-07 | Levene p=0.0003 | Mann-Whitney p=8.6e-09
+
+=== 3. MUESTRA PARA LOS MODELOS (grado 11, casos completos) ===
+n modelos = 348,209 (71.1% de grado 11) | colegios = 11,725
+[Muestra de modelos] n=348,209 (F=187,710, M=160,499) | media F=52.26, M=55.60 | DE F=12.60, M=13.06 | brecha=3.34 IC95%=(3.25, 3.42) | d de Cohen=0.261 | Welch t=76.4, p=0 | Levene p=4.9e-29 | Mann-Whitney p=0
+
+=== 4. REGRESIÓN LINEAL MÚLTIPLE (errores estándar agrupados por colegio) ===
+Sin ajustar: brecha=3.34 IC95%=(3.22, 3.46) R2=0.017
+Ajustado: brecha=3.33 IC95%=(3.22, 3.43) R2=0.154
+VIF más altos: [('C(padre)[T.Secundaria (Bachillerato) completa]', np.float64(3.0)), ('C(madre)[T.Secundaria (Bachillerato) completa]', np.float64(2.7)), ('C(padre)[T.Primaria incompleta]', np.float64(2.6)), ('C(padre)[T.Secundaria (Bachillerato) incompleta]', np.float64(2.5)), ('C(madre)[T.Primaria incompleta]', np.float64(2.1))]
+Sensibilidad (sin educ. de padres, n=398,256): brecha ajustada=3.39
+
+=== 5. INTERACCIONES (brecha ajustada por nivel) ===
+hombre x estrato: p(interacción)=1.3e-20 | brecha por nivel: {'Estrato 1': np.float64(3.75), 'Estrato 2': np.float64(3.56), 'Estrato 3': np.float64(3.08), 'Estrato 4': np.float64(2.47), 'Estrato 5': np.float64(2.69), 'Estrato 6': np.float64(2.76)}
+hombre x area: p(interacción)=6.4e-29 | brecha por nivel: {'RURAL': np.float64(2.47), 'URBANA': np.float64(3.51)}
+hombre x naturaleza: p(interacción)=2.4e-09 | brecha por nivel: {'NO OFICIAL': np.float64(2.73), 'OFICIAL': np.float64(3.52)}
+
+=== 6. MODELOS MULTINIVEL (estudiantes dentro de colegios) ===
+Modelo nulo: var. entre colegios=59.4, var. residual=116.5, ICC=0.338
+Intercepto aleatorio + covariables: brecha=3.73 (EE 0.037), ICC condicional=0.264
+Ajustando pendiente aleatoria de género (lento)...
+Pendiente aleatoria: brecha media=3.42 (EE 0.052)
+Matriz de covarianza de efectos aleatorios (intercepto, hombre):
+        Group  hombre
+Group   24.61    0.86
+hombre   0.86    8.46
+DE de la brecha entre colegios ≈ 2.91 puntos
+
+=== 7. REGRESIÓN CUANTÍLICA (submuestra de 150.000, semilla 1) ===
+  cuantil 0.10: brecha ajustada=2.67 IC95%=(2.46, 2.88)
+  cuantil 0.25: brecha ajustada=3.50 IC95%=(3.32, 3.68)
+  cuantil 0.50: brecha ajustada=4.00 IC95%=(3.85, 4.15)
+  cuantil 0.75: brecha ajustada=3.69 IC95%=(3.53, 3.85)
+  cuantil 0.90: brecha ajustada=3.41 IC95%=(3.23, 3.60)
+
+=== 8. GENERANDO GRÁFICAS PARA INFORME Y VIDEO ===
+Colegios con >=15 estudiantes por sexo: 3,457 | brecha media=3.88 | 89.2% con brecha positiva
+
+Listo en 6.9 min. Resultados y figuras en: resultados_brecha/
