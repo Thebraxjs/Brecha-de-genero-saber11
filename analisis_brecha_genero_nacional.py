@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-===============================================================================
 ANÁLISIS BIOESTADÍSTICO DE LA BRECHA DE GÉNERO EN MATEMÁTICAS - SABER 11 (2025-2)
-===============================================================================
 Autores:
     - Elías Arrieta (2251161)
     - Wilmar Herley Patiño Castaño (225171)
@@ -14,7 +12,7 @@ Profesor: Said Pertuz | Universidad Industrial de Santander (UIS)
 Descripción:
     Pipeline reproducible para evaluar la existencia, magnitud y variación
     contextual de la brecha de género en el módulo de matemáticas del examen
-    nacional Saber 11 (periodo 2025-2, n = 576.209 registros válidos).
+    nacional Saber 11, periodo 2025-2, usado con 576.209 registros válidos.
 
 Estructura del análisis:
     1. Carga, depuración y validación de calidad de datos.
@@ -27,15 +25,13 @@ Estructura del análisis:
     6. Modelos lineales mixtos (multinivel: estudiantes anidados en colegios)
        con intercepto y pendiente aleatoria de género.
     7. Regresión cuantílica (percentiles P10, P25, P50, P75 y P90).
-    8. Exportación automática de visualizaciones (versión informe y versión
-       con fondo transparente para divulgación audiovisual).
+    8. Exportación automática de visualizaciones.
 
 Uso desde terminal:
     python analisis_brecha_genero_nacional.py Examen_Saber_11_20252_nacional.txt [carpeta_salida]
 
 Dependencias:
     pandas, numpy, scipy, statsmodels, matplotlib
-===============================================================================
 """
 
 import os
@@ -125,9 +121,7 @@ def analizar_brecha_grupo(df_sub: pd.DataFrame, etiqueta: str, col_y: str = "pun
     }
 
 
-# ==============================================================================
 # 1. CARGA Y DEPURACIÓN DE DATOS (DECISIONES METODOLÓGICAS D1 - D5)
-# ==============================================================================
 COLUMNAS_REQUERIDAS = [
     "punt_matematicas",
     "estu_genero",
@@ -161,9 +155,7 @@ df["net"] = df["fami_tieneinternet"]
 Y_COL = "punt_matematicas"
 
 
-# ==============================================================================
 # 2. ANÁLISIS DESCRIPTIVO GLOBAL Y CONTRASTE DE WELCH (D2)
-# ==============================================================================
 registrar("\n=== 1. DESCRIPTIVO Y PRUEBA DE WELCH ===")
 analizar_brecha_grupo(df, "Toda la base")
 analizar_brecha_grupo(df[df["estu_grado"] == 11], "Solo grado 11")
@@ -176,9 +168,7 @@ for umbral in (60, 70, 80):
     registrar(f"  % con puntaje >= {umbral}: hombres {prop_m:.1%}, mujeres {prop_f:.1%}")
 
 
-# ==============================================================================
 # 3. ESTRATIFICACIÓN POR PERFILES SOCIOECONÓMICOS COMPARABLES (D7)
-# ==============================================================================
 registrar("\n=== 2. PERFILES A/B/C (estratificación) ===")
 est = df["fami_estratovivienda"]
 mad = df["fami_educacionmadre"]
@@ -209,9 +199,7 @@ for nombre_perfil, mascara in (("Perfil A", perfil_A), ("Perfil B", perfil_B), (
 df_perfiles = pd.DataFrame(res_perfiles)
 df_perfiles.round(3).to_csv(os.path.join(DIR_SALIDA, "perfiles_comparables.csv"), index=False)
 
-# ==============================================================================
 # 4. CONSTRUCCIÓN DE MUESTRA ANALÍTICA PARA MODELADO (D3, D6)
-# ==============================================================================
 registrar("\n=== 3. MUESTRA PARA LOS MODELOS (grado 11, casos completos) ===")
 # D3: Se restringe a grado 11 regular (excluye validantes grado 26 sin estructura escolar)
 g11 = df[df["estu_grado"] == 11]
@@ -222,10 +210,7 @@ d_mod["cole"] = d_mod["cole_codigo_icfes"].astype(int).astype(str)
 registrar(f"n modelos = {len(d_mod):,} ({len(d_mod)/len(g11):.1%} de grado 11) | colegios = {d_mod['cole'].nunique():,}")
 analizar_brecha_grupo(d_mod, "Muestra de modelos")
 
-
-# ==============================================================================
 # 5. REGRESIÓN LINEAL MÚLTIPLE CON ERRORES AGRUPADOS Y DIAGNÓSTICOS
-# ==============================================================================
 registrar("\n=== 4. REGRESIÓN LINEAL MÚLTIPLE (errores estándar agrupados por colegio) ===")
 formula_nula = f"{Y_COL} ~ hombre"
 formula_ajustada = f"{Y_COL} ~ hombre + C(estrato) + C(madre) + C(padre) + C(area) + C(naturaleza) + C(pc) + C(net)"
@@ -264,9 +249,7 @@ mod_sens = smf.ols(
 registrar(f"Sensibilidad (sin educ. de padres, n={len(d_sens):,}): brecha ajustada={mod_sens.params['hombre']:.2f}")
 
 
-# ==============================================================================
 # 6. MODELOS DE INTERACCIÓN (HETEROGENEIDAD DE LA BRECHA POR CONTEXTO)
-# ==============================================================================
 registrar("\n=== 5. INTERACCIONES (brecha ajustada por nivel) ===")
 resultados_interaccion = []
 
@@ -287,9 +270,7 @@ for var_ctx in ("estrato", "area", "naturaleza"):
     registrar(f"hombre x {var_ctx}: p(interacción)={p_interaccion:.2g} | brecha por nivel: {brechas_nivel}")
 
 
-# ==============================================================================
 # 7. MODELOS MULTINIVEL (ESTUDIANTES ANIDADOS EN COLEGIOS)
-# ==============================================================================
 registrar("\n=== 6. MODELOS MULTINIVEL (estudiantes dentro de colegios) ===")
 # Modelo nulo para calcular el Coeficiente de Correlación Intraclase (ICC)
 m_nulo = smf.mixedlm(f"{Y_COL} ~ 1", d_mod, groups=d_mod["cole"]).fit(reml=True)
@@ -313,9 +294,7 @@ sd_pendiente = np.sqrt(float(m_rs.cov_re.iloc[1, 1]))
 registrar(f"DE de la brecha entre colegios ≈ {sd_pendiente:.2f} puntos")
 
 
-# ==============================================================================
 # 8. REGRESIÓN CUANTÍLICA (BRECHA A LO LARGO DE LA DISTRIBUCIÓN)
-# ==============================================================================
 registrar("\n=== 7. REGRESIÓN CUANTÍLICA (submuestra de 150.000, semilla 1) ===")
 sub_cuantil = d_mod.sample(150000, random_state=1)
 filas_cuantil = []
@@ -330,9 +309,7 @@ df_cuantil = pd.DataFrame(filas_cuantil, columns=["cuantil", "brecha", "ic_inf",
 df_cuantil.round(3).to_csv(os.path.join(DIR_SALIDA, "cuantilica.csv"), index=False)
 
 
-# ==============================================================================
 # 9. GENERACIÓN AUTOMÁTICA DE GRÁFICAS (ESTÁNDAR Y FONDO TRANSPARENTE)
-# ==============================================================================
 registrar("\n=== 8. GENERANDO GRÁFICAS PARA INFORME Y VIDEO ===")
 
 
