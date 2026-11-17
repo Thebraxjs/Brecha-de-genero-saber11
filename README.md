@@ -9,7 +9,7 @@ Repositorio de evidencia técnica, visualizaciones y código reproducible del pr
   * Wilmar Herley Patiño Castaño (`225171`)
   * Keinner Pulido Cuadros (`2231213`)
   * María Castañeda Villamizar (`2232337`)
-* **Video de divulgación:** `[Inserta aquí el enlace de YouTube del video final]`
+* **Video de divulgación:** `https://youtu.be/cterejNC_zA?si=C2fzqik7uwfpgsl8`
 
 ---
 
@@ -82,14 +82,14 @@ El pipeline en Python ejecuta de forma secuencial:
 ## 5. Requisitos y ejecución
 
 ### Instalación de dependencias
-Asegúrate de tener Python 3.9 o superior e instala las librerías requeridas:
+Asegurese de tener Python 3.9 o superior e instale las librerías requeridas:
 
 ```bash
 pip install pandas numpy scipy statsmodels matplotlib
 ```
 
 ### Ejecución del análisis
-Ubica el archivo `Examen_Saber_11_20252_nacional.txt` en la raíz del proyecto (o indica su ruta como primer argumento) y ejecuta:
+Ubique el archivo `Examen_Saber_11_20252_nacional.txt` en la raíz del proyecto (o indique su ruta como primer argumento) y ejecute:
 
 ```bash
 python analisis_brecha_genero_nacional.py Examen_Saber_11_20252_nacional.txt resultados_brecha
